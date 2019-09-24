@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>转账</title>
+</head>
+<body>
+    开始日期<input type="text" name="beginTime">
+    结束日期<input type="text" name="endTime">
+    <input type="button" value="查询" onclick="transferInfo()"><br>
+
+    <table border="1" width="400px">
+        <thead>
+        <tr>
+            <td>交易日期</td>
+            <td>收入</td>
+            <td>支出</td>
+            <td>交易类型</td>
+            <td>余额</td>
+            <td>备注</td>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            transferInfo();
+        })
+
+        function transferInfo(){
+            $.ajax({
+                type:"get",
+                url:"transferinfo.do",
+                data:{"beginTime": $("input[name='beginTime']").val(), "endTime":$("input[name='endTime']").val()},
+                dataType:"json",
+                success:function(data){
+                    if(data.code == 0){
+                        //alert(data.info);
+
+                        $("tbody").empty();
+                        var infos = data.info;
+                        $(infos).each(function(){
+                            var html = "<tr>\n" +
+                                "        <td>" + this.createTime + "</td>\n" +
+                                "        <td>" + this.income + "</td>\n" +
+                                "        <td>" + this.output + "</td>\n" +
+                                "        <td>" + this.consumType + "</td>\n" +
+                                "        <td>" + this.balance + "</td>\n" +
+                                "        <td>" + this.comment + "</td>\n" +
+                                "\n" +
+                                "    </tr>";
+
+                            $("tbody").append($(html));
+                        })
+
+                    }
+                }
+            })
+        }
+
+    </script>
+</body>
+</html>
